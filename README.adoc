@@ -1,71 +1,15 @@
-= sifxml2pescjson
-Code to convert between SIF XML and PESC JSON
+= sifxml2pescjson_source
+Source code to generate scripts to convert between SIF XML and PESC JSON
 
-== Transform Scripts
 
-The transform scripts are contained in `scripts/`, and include XSLT 1.0 transforms to process XML, and Javascript scripts to process JSON.
-These tools have been preferred over programming-language?~@~Sspecific tools, in order to make the scripts as widely usable as possible. This
-repository includes scripts specific to the current SIF-AU specification, and will be updated as the SIF-AU specification is updated:
+== Purpose 
+The code in this repository, as described below, generates the https://github.com/nsip/sifxml2pescjson[transform scripts] to convert between
+SIF XML and PESC JSON.  See the https://github.com/nsip/sifxml2pescjson[sifxml2pescjson] repository for more information.
 
-* `scripts/sif2json.xslt`: XSLT 1.0 transform to convert SIF XML to PESC JSON, as an array of objects.
-** Note: while lists within a SIF object are represented as `{ "list_name" : { "listitem_name" : [ "item1", "item2", ... ] } }`,
-the list of SIF objects is represented as `[ { "objectname" : { ... } }, { "objectname" : { ... } }, ... ]`. This is to permit
-different SIF objects to appear in the same document, without needing to gather up all instances of the same object into the same
-list (`{ "objectname" : [ { ... }, { ... }, ... ], "objectname2" : [ { ... }, { ... }, ... ], ... }`).
-* `scripts/json2sif.js`: Javascript to transform an array of PESC JSON objects into SIF XML, as a list of objects (with no wrapper).
-** The script depends on the Node libraries https://github.com/rhalff/dot-object[dot-object] and https://github.com/x2js/x2js[x2js]. You will need to update `x2js` to version 3.2.3, which fixes a bug whereby a zero XML value with attributes was being rendered as an empty tag: https://github.com/x2js/x2js/pull/76
-* `scripts/sifreorder.xslt`: XSLT 1.0 transform to reorder the XML output of `scripts/json2sif.js`, if the source JSON has not preserved the
-ordering of keys in the XML schema. Run this if the JSON has been generated from scratch, or if the JSON is being round-tripped from
-XML, and has been processed so as to lose key-ordering.
-* `scripts/out.txt`: A flat file representation of all the structural information in the schema, used to generate the transform scripts.
-Other developers can use this representation to generate their own transformations of SIF XML.
-* `scripts/sif2jsonspecgen.xslt`: a variant of `scripts/sif2json.xslt`, which preserves only the parent in any XPaths. Used in
-internal specgen processing, as it can parse SIF object fragments as well as full objects (at the cost of not anticipating potential
-ambiguities in paths). It should only be used if you will need to convert partial SIF XML objects, and are prepared to check for ambiguous XPaths.
-
-The code in this repository, as described below, generates these transform scripts. The code would normally be run only by specification maintainers,
+The code would normally be run only by specification maintainers,
 but it can be customised by developers to generate their own language-specific tools, which may be more efficient. Developers will need access
-to either the `specgen` input source, or the intermediate `scripts/out.txt` flat file representation of the schema (see below).
-
-== Purpose
-https://www.a4l.org[Access for Learning (A4L)] is collaborating with the http://www.pesc.org[Postsecondary Electronic Standards Council (PESC)],
-to make https://www.a4l.org/general/custom.asp?page=SIFSpecifications[SIF] and PESC data available in JSON as a first-class data format.
-
-SIF to date has specified its data model in XML, and has supported JSON for its data exchanges via the 
-https://www.xml.com/pub/a/2006/05/31/converting-between-xml-and-json.html[Goessner notation]—which guarantees that conversion between XML and JSON is lossless
-and can be round-tripped. (The latter is a critical requirement for the SIF ecosystem, as SIF servers and brokers will need to service clients in
-both XML and JSON for the foreseeable future.) However, in seeking to preserve the structure of the source XML, the Goessner notation introduces 
-a number of undesirable characteristics into the JSON it generates:
-
-* Keys may be prefixed with `@` or `#`, to preserve information about XML attributes
-* Lists consisting of a single entry are treated as single elements
-* The distinction between numerals, booleans, and strings is not preserved
-
-The http://nebula.wsimg.com/bc453aee47f158d0877bad0f1fda0169?AccessKeyId=4CF7FAE11697F99C9E6B&disposition=0&alloworigin=1[PESC Compliant JSON specification] addresses all these issues.
-It does so by making the transformation between XML and JSON schema-aware, where Goessner notation uses a single schema-agnostic transform
-in each direction. In particular:
-
-* Transformation from XML to JSON needs to know the names of all objects, and locations of all lists, attributes on simple content, booleans and numbers in the XML schema.
-* Transformation from JSON to XML needs to know the names of all objects, and locations of attributes on complex content in the XML schema.
-
-Each SIF XML schema instance therefore needs to have its own associated transform scripts. The code in this repository generates those transform scripts for a SIF schema instance.
-
-Unlike Goessner JSON, PESC JSON looks like conventional JSON, and is readily processed by downstream tools without any barriers from idiosyncratic key prefixes.
-See separately for https://github.com/nsip/sifxml2pescjson/wiki/Format-samples[samples of Goessner and PESC JSON].
-
-== Conversion issues
-
-=== Numeric precision
-
-Since JSON is Javascript, JSON, like Javascript (and unlike XML)  does not differentiate between integers and floating point values. If an XML value is a floating point
-value with trailing zeroes after the decimal point, those zeroes are stripped in the conversion to JSON—which is done in Javascript:
-`54.10` is converted to `54.1`, and `54.000` to `54`.
-Numeric normalisation also means that leading zeroes are dropped before integers parts of numbers, and inserted before fractional parts of numbers:
-`010` is converted to `10`, and `.8` to `0.8`.
-
-The failure to distinguish between `54.000` and `54` is a feature of JSON. If this is unacceptable in workflows involving JSON workflows, the only
-way to prevent it is to force such values to be transmitted in JSON as strings instead of numbers. That would involve removing the `NUMBER` lines
-from `out.txt`, or the associated numeric templated (not inserting quotations around its value) in `scripts/sif2json.xslt`.
+to either the `specgen_source` input source, or the intermediate `out.txt` flat file representation of the schema generated as part of
+the sifxml2pescjson output.
 
 == Approach
 
@@ -112,7 +56,7 @@ structural information to generate the transform scripts:
 
 == Flat File to Transforms
 
-The transform scripts are contained in `scripts/`, and are all generated from `out.txt`: 
+The transform scripts are output to `scripts/`, and are all generated from `out.txt`: 
 
 * `scripts/sif2json.xslt` by `makexslt.rb`, using OBJECT, SIMPLE ATTRIBUTE, LIST, NUMERIC, BOOLEAN
 * `scripts/json2sif.js` by `makejs2xml.rb`, using OBJECT, COMPLEX ATTRIBUTE
@@ -120,9 +64,11 @@ The transform scripts are contained in `scripts/`, and are all generated from `o
 
 As noted, developers can also use `out.txt` to generate their own transforms.
 
+The scripts generated by this toolset to `scripts` are published in https://github.com/nsip/sifxml2pescjson[].
+
 == How to install and run this tool
 
-NOTE: Most users do not need to install and run this tool. Only the scripts contained in `scripts/`, which are generated by this tool, are needed in order to convert between SIF AU XNL and SIF AU JSON. NSIP undertakes to update these scripts each time the SIF AU specification is updated.
+NOTE: Most users do not need to install and run this tool. Only the scripts contained in `scripts/`, which are generated by this tool, are needed in order to convert between SIF AU XNL and SIF AU JSON. NSIP undertakes to update these scripts each time the SIF AU specification is updated, and publish them to https://github.com/nsip/sifxml2pescjson[].
 
 This tool is a series of shell scripts that invoke various other tools.
 
