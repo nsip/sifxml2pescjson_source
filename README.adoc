@@ -24,7 +24,7 @@ The information in the specgen input XML files is processed via an XSLT transfor
 representation of all objects and types in the specification. Two separate files are generated: `objectgraph.txt`, for the objects in the 
 specification (including any http://www.xfront.com/GlobalVersusLocal.html#FirstDesign[Russian-Doll] definitions embedded within objects), 
 and `typegraph.txt`, for the common types in the specification
-(used in ihttp://www.xfront.com/GlobalVersusLocal.html#ThirdDesign[Venetian-Blind] style.) The file contents for these is documented in `sifobject.xslt`.
+(used in http://www.xfront.com/GlobalVersusLocal.html#ThirdDesign[Venetian-Blind] style.) The file contents for these is documented in `sifobject.xslt`.
 
 `sifobject.xslt` is the only code in this repository that depends on specgen input: all other code works off the output files of `sifobject.xslt`. 
 The `sifobject.xslt` transform could be rewritten to process XSD schemas instead; this has not proven necessary for SIF.
