@@ -47,7 +47,7 @@ def get_objgraph(file)
     else
       /(?<elem>\S+?):\s+(?<list>LIST )?(?<type>[^;]+);/ =~ line
       warn line unless type
-      latest << { elem: elem, type: type.sub(/\s*$/, ""), attr: [], elems: [], list: !list.nil? }
+      latest << { elem: elem, type: type&.sub(/\s*$/, ""), attr: [], elems: [], list: !list.nil? }
     end
   end
   graph
@@ -231,8 +231,8 @@ def complexattrfind(arr, path)
 end
 
 
-objgraph = get_objgraph(File.open("objectgraph.txt"))
-@typegraph = get_objgraph(File.open("typegraph.txt"))
+objgraph = get_objgraph(File.open("objectgraph.txt", encoding: "utf-8"))
+@typegraph = get_objgraph(File.open("typegraph.txt", encoding: "utf-8"))
 
 # what are the base objects?
 objgraph.keys.each { |k| puts "OBJECT: #{k}" }

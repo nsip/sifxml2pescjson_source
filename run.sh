@@ -16,12 +16,15 @@ ruby makejs2xml.rb < scripts/out.txt > scripts/json2sif.js
 mkdir -p test
 echo "<sif>" > test/siftest.xml 
 for filename in ./specgen_input/06_DataModel/Custom/Common/*.xml; do
+#for filename in ./specgen/GenerateSpecTool_5/bin/Debug/dist/Specification/06_DataModel/Custom/Common/*.xml; do
   if [[ "$filename" == "./specgen_input/06_DataModel/Custom/Common/StudentScoreSet.xml" ]]; then
+  #if [[ "$filename" == "./specgen/GenerateSpecTool_5/bin/Debug/dist/Specification/06_DataModel/Custom/Common/StudentScoreSet.xml" ]]; then
     continue
   fi
   perl sifexamples.pl "$filename" >> test/siftest.xml
 done
 for filename in ./specgen_input/06_DataModel/Custom/AU/*.xml; do
+#for filename in ./specgen/GenerateSpecTool_5/bin/Debug/dist/Specification/06_DataModel/Custom/AU/*.xml; do
   if [[ "$filename" == "./specgen_input/06_DataModel/Custom/Common/StudentScoreSet.xml" ]]; then
     continue
   fi
