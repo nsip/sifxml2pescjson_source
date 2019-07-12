@@ -254,16 +254,21 @@ print <<~"END"
 
   <xsl:template name="encode-value">
                 <xsl:param name="value"/>
+                <!--
                 <xsl:choose>
                         <xsl:when test="normalize-space($value) != $value">
+                -->
+                <!-- no, we always call encode, because we escape \ as well -->
                                 <xsl:call-template name="encode">
                                         <xsl:with-param name="input" select="$value"/>
                                 </xsl:call-template>
+                <!--
                         </xsl:when>
                         <xsl:otherwise>
                                 <xsl:value-of select="$value"/>
                         </xsl:otherwise>
                 </xsl:choose>
+                -->
   </xsl:template>
 
   <xsl:template match="node/@TEXT | text()" name="removeBreaks" priority="10">
