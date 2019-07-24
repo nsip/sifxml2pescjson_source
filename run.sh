@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sh au_extract.sh
+#sh au_extract.sh
 #sh input_extract.sh
 
 # 3. Generate transformation scripts and stylesheets

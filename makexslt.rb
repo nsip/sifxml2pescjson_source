@@ -74,6 +74,7 @@ booleanattr = ["NEVERMATCH"] if booleanattr.empty?
 print <<~"END"
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:json="http://json.org/">
   <!-- from https://gist.github.com/inancgumus/3ce56ddde6d5c93f3550b3b4cdc6bcb8 -->
   <!-- https://github.com/bramstein/xsltjson/blob/master/conf/xml-to-jsonml.xsl -->
@@ -128,7 +129,9 @@ print <<~"END"
 
   <!-- numeric or boolean -->
   <xsl:template match="#{numeric.concat(boolean).join(' | ')}" mode="value">
-    <xsl:apply-templates select="."/>
+    <xsl:call-template name="encode-numeric-value">
+      <xsl:with-param name="value" select="." />
+    </xsl:call-template>
   </xsl:template>
 
   <xsl:template match="* | @*" mode="attrvalue">
@@ -137,7 +140,9 @@ print <<~"END"
 
   <!-- numeric or boolean attribute -->
   <xsl:template match="#{numericattr.concat(booleanattr).join(' | ')}" mode="attrvalue">
-    <xsl:apply-templates select="."/>
+    <xsl:call-template name="encode-numeric-value">
+      <xsl:with-param name="value" select="." />
+    </xsl:call-template>
   </xsl:template>
 
   <!-- simple content with attribute -->
@@ -275,6 +280,18 @@ print <<~"END"
     <xsl:call-template name="encode-value">
       <xsl:with-param name="value" select="." />
     </xsl:call-template>
+  </xsl:template>
+
+  <xsl:template name="encode-numeric-value">
+                <xsl:param name="value"/>
+                <xsl:choose>
+                        <xsl:when test="substring(normalize-space($value), 1, 1) = '.'">
+                                <xsl:text>0</xsl:text><xsl:value-of select="$value"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                                <xsl:value-of select="$value"/>
+                        </xsl:otherwise>
+                </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>
