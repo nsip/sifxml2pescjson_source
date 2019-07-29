@@ -147,12 +147,12 @@ print <<~"END"
 
   <!-- simple content with attribute -->
   <xsl:template match="#{simpleattr.join(' | ')}" mode="detect">
-    <xsl:text>"</xsl:text><xsl:value-of select="name()"/>" : <xsl:apply-templates select="." mode="obj-content" />
+    <xsl:text>"</xsl:text><xsl:value-of select="name()"/>" : <xsl:apply-templates select="." mode="obj-content" priority="1"/>
     <xsl:if test="count(following-sibling::*) &gt; 0">, </xsl:if>
   </xsl:template>
 
-  <!-- list -->
-  <xsl:template match="#{list.join(' | ')}" mode="detect">
+  <!-- list  - takes precedence when list of elements which are simple content with attributes -->
+  <xsl:template match="#{list.join(' | ')}" mode="detect" priority="2">
   <!-- repeating item may not be wrapped up in a List element (so check names of preceding-siblings) -->
   <xsl:if test="count(preceding-sibling::*) = 0 or not(name(preceding-sibling::*[1]) = name(.))">
       <xsl:text>"</xsl:text><xsl:value-of select="name()"/><xsl:text>" : [</xsl:text>
