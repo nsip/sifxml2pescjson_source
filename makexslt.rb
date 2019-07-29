@@ -146,8 +146,8 @@ print <<~"END"
   </xsl:template>
 
   <!-- simple content with attribute -->
-  <xsl:template match="#{simpleattr.join(' | ')}" mode="detect">
-    <xsl:text>"</xsl:text><xsl:value-of select="name()"/>" : <xsl:apply-templates select="." mode="obj-content" priority="1"/>
+  <xsl:template match="#{simpleattr.join(' | ')}" mode="detect" priority="1">
+    <xsl:text>"</xsl:text><xsl:value-of select="name()"/>" : <xsl:apply-templates select="." mode="obj-content"/>
     <xsl:if test="count(following-sibling::*) &gt; 0">, </xsl:if>
   </xsl:template>
 
