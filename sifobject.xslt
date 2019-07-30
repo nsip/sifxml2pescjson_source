@@ -61,6 +61,12 @@ The output takes the following format:
 
   <xsl:output method="text"  encoding="utf-8"/>
 
+  <!-- One pass through we'll be appending 'Type' to all the dataObject names 
+        - SpecGen builds a complexType for each dataObject
+        - Infrastructure schema re-uses some of those dataObject derived complexTypes
+    -->
+  <xsl:param name="objSuffix"/>
+
   <xsl:strip-space elements="*" />
 
   <xsl:template match="/">
@@ -80,7 +86,7 @@ The output takes the following format:
   <xsl:template match="//sif:DataObject/sif:Item[1] | //sif:CommonElement/sif:Item[1]">
     <xsl:choose>
       <xsl:when test="../sif:Item[2] | ../sif:Choice">
-        <xsl:value-of select="sif:Element"/>//
+        <xsl:value-of select="concat(sif:Element, $objSuffix)"/>//
         <xsl:if test="sif:Type">
           <xsl:text>%Inherits: </xsl:text> 
           <xsl:call-template name="type_extract">
@@ -94,7 +100,7 @@ The output takes the following format:
       <xsl:otherwise> 
         <xsl:choose>
           <xsl:when test="sif:Element">
-            <xsl:value-of select="sif:Element"/> 
+            <xsl:value-of select="concat(sif:Element, $objSuffix)"/> 
           </xsl:when>
           <xsl:otherwise>
             <xsl:value-of select="sif:Attribute"/> 

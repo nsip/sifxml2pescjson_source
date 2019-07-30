@@ -121,6 +121,8 @@ npm install fs
 npm install dot-object
 ----
 
+Another little utility that you will need is: jq which you can download from https://stedolan.github.io/jq/[github]
+
 Lastly you need to make the shell scripts executable:
 
 [source,console]
