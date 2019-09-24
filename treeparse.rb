@@ -62,21 +62,29 @@ end
 def xpathtype(arr, path, object)
   arr.each do |a|
     if a[:elems] && !a[:elems].empty?
-      puts "XPATHTYPE\t#{a[:elem]}\t#{path}/#{a[:elem]}\tLOOKUP\t#{object}\t#{path}"
+      puts "XPATHTYPE:\t#{a[:elem]}\t#{path}/#{a[:elem]}\tLOOKUP\t#{object}\t#{path}"
       xpathtype(a[:elems], "#{path}/#{a[:elem]}", "TYPE")
     elsif a[:type] && @typegraph[a[:type]]
-      puts "XPATHTYPE\t#{a[:elem] || 'node()'}\t#{a[:type]}\tLOOKUP\t#{object}\t#{path}"
+      puts "XPATHTYPE:\t#{a[:elem] || 'node()'}\t#{a[:type]}\tLOOKUP\t#{object}\t#{path}"
     elsif a[:inherits] && @typegraph[a[:inherits]]
-      puts "XPATHTYPE\t#{a[:elem] || 'node()'}\t#{a[:inherits]}\tLOOKUP\t#{object}\t#{path}"
+      puts "XPATHTYPE:\t#{a[:elem] || 'node()'}\t#{a[:inherits]}\tLOOKUP\t#{object}\t#{path}"
     elsif a[:type] || a[:inherits]
-      puts "XPATHTYPE\t#{a[:elem] || 'node()'}\t#{a[:type] || a[:inherits]}\t\t#{object}\t#{path}"
+      puts "XPATHTYPE:\t#{a[:elem] || 'node()'}\t#{a[:type] || a[:inherits]}\t\t#{object}\t#{path}"
     end
   end
 end
 
 def traverse(arr, path)
   arr.each do |a|
-      puts "TRAVERSE: #{path}/#{a[:elem]}"
+    display = path.gsub(%r{//+}, "/").sub(%r{/+$}, "") 
+    display = "#{display}/#{a[:elem]}" if a[:elem]
+    if a[:attr].nil? || a[:attr].empty?
+      puts "TRAVERSE:\t#{display}\t#{a[:type]}" if (a[:elem])
+    else
+      a[:attr].each do |aa|
+        puts "TRAVERSE:\t#{display}/@#{aa[:attr]}\t#{aa[:type]}" 
+      end
+    end
     if a[:elems] && !a[:elems].empty?
       traverse(a[:elems], "#{path}/#{a[:elem]}")
     elsif a[:type] && @typegraph[a[:type]]
