@@ -1,0 +1,10 @@
+data.xml
+node_modules/
+specgen_input/
+test/
+objs.txt
+typegraph.txt
+objectgraph.txt
+package.json
+package-lock.json
+scripts/
