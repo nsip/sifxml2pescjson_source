@@ -74,28 +74,31 @@ def xpathtype(arr, path, object)
   end
 end
 
-def traverse(arr, path)
+def traverse(arr, path, header)
   arr.each do |a|
     display = path.gsub(%r{//+}, "/").sub(%r{/+$}, "") 
     display = "#{display}/#{a[:elem]}" if a[:elem]
-    if a[:attr].nil? || a[:attr].empty?
-      puts "TRAVERSE:\t#{display}\t#{a[:type]}" if (a[:elem])
-    else
-      a[:attr].each do |aa|
-        puts "TRAVERSE:\t#{display}/@#{aa[:attr]}\t#{aa[:type]}" 
+    object = path.sub(%r{/.*$}, "")
+    unless header == "TRAVERSE ALL:" && /SIF_Metadata|SIF_ExtendedElements|LocalCodeList/.match(display)
+      if a[:attr].nil? || a[:attr].empty?
+        puts "#{header}\t#{display}\t#{object}\t#{a[:elem]}\t#{a[:type]}" if (a[:elem])
+      else
+        a[:attr].each do |aa|
+          puts "#{header}\t#{display}/@#{aa[:attr]}\t#{object}\t@#{aa[:attr]}\t#{aa[:type]}" 
+        end
       end
     end
     if a[:elems] && !a[:elems].empty?
-      traverse(a[:elems], "#{path}/#{a[:elem]}")
+      traverse(a[:elems], "#{path}/#{a[:elem]}", header)
     elsif a[:type] && @typegraph[a[:type]]
       unless @types_used.include? a[:type]
         @types_used << a[:type]
-        traverse(@typegraph[a[:type]], "#{path}/#{a[:elem]}")
+        traverse(@typegraph[a[:type]], "#{path}/#{a[:elem]}", header)
         @types_used.pop()
       end
     end
     if a[:inherits] && @typegraph[a[:inherits]]
-      traverse(@typegraph[a[:inherits]], "#{path}/#{a[:elem]}")
+      traverse(@typegraph[a[:inherits]], "#{path}/#{a[:elem]}", header)
     end
   end
 end
@@ -264,4 +267,5 @@ objgraph.keys.each { |k| booleanfind(objgraph[k], k) }
 objgraph.keys.each { |k| xpathtype(objgraph[k], k, "OBJECT") }
 @typegraph.keys.each { |k| xpathtype(@typegraph[k], k, "TYPE") }
 
-objgraph.keys.each { |k| traverse(objgraph[k], k) }
+objgraph.keys.each { |k| traverse(objgraph[k], k, "TRAVERSE ALL:") }
+@typegraph.keys.each { |k| traverse(@typegraph[k], k, "TRAVERSE COMMON TYPES:") }
