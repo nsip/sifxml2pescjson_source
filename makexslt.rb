@@ -81,7 +81,7 @@ print <<~"END"
   <xsl:output method="text" omit-xml-declaration="yes" encoding="utf-8"/>
 
   <xsl:template match="/*[node()]">
-    <xsl:apply-templates select="." mode="obj-list" />
+    <xsl:apply-templates select="." mode="#{options[:path_truncate] ? 'obj-detect' : 'obj-list'}" />
   </xsl:template>
 
   <xsl:template match="*" mode="detect">
@@ -97,7 +97,7 @@ print <<~"END"
   </xsl:template>
 
   <xsl:template match="*" mode="value">
-    <xsl:text>"</xsl:text><xsl:apply-templates select="."/><xsl:text>"</xsl:text>
+    <xsl:text>"</xsl:text><xsl:apply-templates select="node/@TEXT | text()"/><xsl:text>"</xsl:text>
   </xsl:template>
 
   <xsl:template match="*" mode="obj-detect">
