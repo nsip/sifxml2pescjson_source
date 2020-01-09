@@ -11,7 +11,7 @@ optparse.parse!
 
 def truncate_paths(arr)
   arr.inject([]) do |memo, elem|
-    memo << elem.sub(%r{^.+?(/[^/]+/[^/]+)$}, "\\1")
+    memo << elem.sub(%r{^.+?/([^/]+/[^/]+)$}, "\\1")
   end.uniq
 end
 
