@@ -8,7 +8,8 @@ sh au_extract.sh
 
 # 3. Generate transformation scripts and stylesheets
 
-ruby treeparse.rb > scripts/out.txt
+grep "schemaVersion" specgen_input/SIF.Config_DataModel_AU.xml | perl -pe 's/\s*<schemaVersion>/VERSION: /; s#</schemaVersion>##; $$_;' > scripts/out.txt
+ruby treeparse.rb >> scripts/out.txt
 ruby makexslt.rb < scripts/out.txt > scripts/sif2json.xslt
 ruby makexslt.rb -p < scripts/out.txt > scripts/sif2jsonspecgen.xslt
 ruby makereorder.rb < scripts/out.txt > scripts/sifreorder.xslt
@@ -62,8 +63,8 @@ fi
 
 perl sifexamples.pl ./specgen_input/80_BackMatter/Generic-CommonTypes.xml >> test/siftest_specgen.xml
 perl sifexamples.pl ./specgen_input/80_BackMatter/Custom/DataModel-CommonTypes-Custom.xml >> test/siftest_specgen.xml
-perl sifexamples1.pl ./specgen_input/80_BackMatter/Generic-CommonTypes.xml exp
-perl sifexamples1.pl ./specgen_input/80_BackMatter/Custom/DataModel-CommonTypes-Custom.xml exp
+#perl sifexamples1.pl ./specgen_input/80_BackMatter/Generic-CommonTypes.xml exp
+#perl sifexamples1.pl ./specgen_input/80_BackMatter/Custom/DataModel-CommonTypes-Custom.xml exp
 
 echo "</sif>" >> test/siftest.xml 
 echo "</sif>" >> test/siftest_specgen.xml 
