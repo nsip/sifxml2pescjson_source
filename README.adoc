@@ -39,6 +39,7 @@ will not be understood by `sifobject.xslt`.
 The script `treeparse.rb` iterates through `objectgraph.txt` and `typegraph.txt`, and generates `out.txt`, as a flattened file containing all needed 
 structural information to generate the transform scripts:
 
+* `VERSION`: the version number of the SIF specification
 * `OBJECT`: a list of all objects in the specification
 * `COMPLEX ATTRIBUTE`: the XPath (from object root) of all instances of XML attributes on complex content. The XPath is followed by a description of the complex content, as a diagnostic; that description is not used downstream.
 * `SIMPLE ATTRIBUTE`: the XPath (from object root) of all instances of XML attributes on simple content. The XPath is followed by the type of the simple content, as a diagnostic; that description is not used downstream.
@@ -46,14 +47,17 @@ structural information to generate the transform scripts:
 * `NUMERIC`: the XPath (from object root) of all instances of elements and attributes with numeric value.
 * `BOOLEAN`: the XPath (from object root) of all instances of elements and attributes with boolean value.
 * `XPATHTYPE`: a flattened representation of all elements in the specification, in order. (Attributes are ignored.) Entries are grouped by their object or type container. Each entry contains the following tab-delimited values:
-** The element name. If no element name is applicable (the type is an alias of another type), the string `node()` is used instead.
+** The element name, or attribute name (prefixed by `@`). If no element or attribute name is applicable (the type is an alias of another type), the string `node()` is used instead.
 ** The type of the element, as specified in `objectgraph.txt` and `typegraph.txt`.
 ** Whether the type of the element is to be looked up in a different type container (i.e. is a common type defined in the specification, as opposed to a primitive type).
 ** Whether the element is contained in an object or a common type.
 ** The name of the object or common type container.
+** Optionally, `ALIAS`, to indicate that this entry is an alias for the element type; that refers to the element, or if the element is empty (`node()`), the object or common type container itself.
 ** For example: `Name    OtherNameType   LOOKUP  TYPE    OtherNamesType`: `Name` is an element inside the container `OtherNamesType`, of type `OtherNameType`. The type `OtherNameType` is defined in a different container (`LOOKUP`). `OtherNamesType` is a common type, not an object (`TYPE`).
-* `TRAVERSE ALL`: a list of all XPaths in the specification for all objects, containing the XPath, the object name, the element or attribute name, and the element or attribute type. (The recurring element under SIF_Metadata, SIF_ExtendedElements and LocalCodeList are omitted.)
-* `TRAVERSE COMMON TYPES`: a list of all XPaths in the specification of common types; same format as `TRAVERSE ALL`.
+* `TRAVERSE ALL, DEPTH 1`: a list of all XPaths one level down from the object root in the specification for all objects, containing the XPath, the object name, the element or attribute name, and the element or attribute type. (The recurring element under SIF_Metadata, SIF_ExtendedElements and LocalCodeList are omitted.)
+* `TRAVERSE ALL, DEPTH ALL`: a list of all XPaths in the specification for all objects, containing the XPath, the object name, the element or attribute name, and the element or attribute type. (The recurring element under SIF_Metadata, SIF_ExtendedElements and LocalCodeList are omitted.)
+* `TRAVERSE COMMON TYPES, DEPTH 1`: a list of all XPaths one level down from the type root in the specification of common types; same format as `TRAVERSE ALL`.
+* `TRAVERSE COMMON TYPES, DEPTH ALL`: a list of all XPaths in the specification of common types; same format as `TRAVERSE ALL`.
 
 == Flat File to Transforms
 

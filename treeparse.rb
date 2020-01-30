@@ -61,15 +61,22 @@ end
 
 def xpathtype(arr, path, object)
   arr.each do |a|
+    elem = if a[:elem]
+             a[:elem]
+           elsif a[:attr] && !a[:attr].empty?
+             "@#{a[:attr][0][:attr]}"
+           else
+             "node()"
+           end
     if a[:elems] && !a[:elems].empty?
-      puts "XPATHTYPE:\t#{a[:elem]}\t#{path}/#{a[:elem]}\tLOOKUP\t#{object}\t#{path}"
+      puts "XPATHTYPE:\t#{elem}\t#{path}/#{a[:elem]}\tLOOKUP\t#{object}\t#{path}"
       xpathtype(a[:elems], "#{path}/#{a[:elem]}", "TYPE")
     elsif a[:type] && @typegraph[a[:type]]
-      puts "XPATHTYPE:\t#{a[:elem] || 'node()'}\t#{a[:type]}\tLOOKUP\t#{object}\t#{path}"
+      puts "XPATHTYPE:\t#{elem}\t#{a[:type]}\tLOOKUP\t#{object}\t#{path}"
     elsif a[:inherits] && @typegraph[a[:inherits]]
-      puts "XPATHTYPE:\t#{a[:elem] || 'node()'}\t#{a[:inherits]}\tLOOKUP\t#{object}\t#{path}"
+      puts "XPATHTYPE:\t#{elem}\t#{a[:inherits]}\tLOOKUP\t#{object}\t#{path}\tALIAS"
     elsif a[:type] || a[:inherits]
-      puts "XPATHTYPE:\t#{a[:elem] || 'node()'}\t#{a[:type] || a[:inherits]}\t\t#{object}\t#{path}"
+      puts "XPATHTYPE:\t#{elem}\t#{a[:type] || a[:inherits]}\t\t#{object}\t#{path}\tALIAS"
     end
   end
 end

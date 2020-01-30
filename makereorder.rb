@@ -7,6 +7,7 @@ while line = gets do
     a = line.chomp.split /\t/
     # XPATHTYPE       ExclusionRule   ExclusionRuleType       LOOKUP  TYPE    ExclusionRulesType
     path = a[1]
+    path = "node()" if /^\@/.match(path)
     type = a[2]
     lookup = a[3]
     object = a[4]
