@@ -2,7 +2,7 @@
 
 
 #  Run ONE of the following to setup  objectgraph.txt and typegraph.txt
-sh au_extract.sh
+#sh au_extract.sh
 #sh inf_extract.sh
 #sh input_extract.sh
 
@@ -65,6 +65,8 @@ perl sifexamples.pl ./specgen_input/80_BackMatter/Generic-CommonTypes.xml >> tes
 perl sifexamples.pl ./specgen_input/80_BackMatter/Custom/DataModel-CommonTypes-Custom.xml >> test/siftest_specgen.xml
 #perl sifexamples1.pl ./specgen_input/80_BackMatter/Generic-CommonTypes.xml exp
 #perl sifexamples1.pl ./specgen_input/80_BackMatter/Custom/DataModel-CommonTypes-Custom.xml exp
+
+cat attribute_test.xml >> test/siftest.xml
 
 echo "</sif>" >> test/siftest.xml 
 echo "</sif>" >> test/siftest_specgen.xml 
