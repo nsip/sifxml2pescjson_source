@@ -1,5 +1,4 @@
-require "byebug"
-require "pp"
+#require "byebug"
 
 # Read in files objectgraph.txt and typegraph.txt, which contain structural information about the SIF spec as a graph,
 # and generate a single flat file containing all structural information about the spec
@@ -199,8 +198,6 @@ end
 
 def simpleattrfind(arr, path)
   arr.each do |a|
-    #pp a
-    #byebug
     elem = a[:elem] ? ( "/" + a[:elem] ) : ""
     if a[:attr] && !a[:attr].empty? && isSimpleType(a)
       puts "SIMPLE ATTRIBUTE: #{path}#{elem}\t#{a[:type] || a[:inherits]}"
@@ -288,3 +285,5 @@ objgraph.keys.each { |k| traverse(objgraph[k], k, 0, -1, "TRAVERSE ALL, DEPTH AL
 @typegraph.keys.each { |k| traverse(@typegraph[k], k, 0, 1, "TRAVERSE COMMON TYPES, DEPTH 1") }
 @counter = 0
 @typegraph.keys.each { |k| traverse(@typegraph[k], k, 0, -1, "TRAVERSE COMMON TYPES, DEPTH ALL") }
+
+puts "END"
