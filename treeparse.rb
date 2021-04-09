@@ -1,4 +1,6 @@
 #require "byebug"
+require "pp"
+require "set"
 
 # Read in files objectgraph.txt and typegraph.txt, which contain structural information about the SIF spec as a graph,
 # and generate a single flat file containing all structural information about the spec
@@ -81,9 +83,12 @@ def xpathtype(arr, path, object)
 end
 
 @counter = 0
+@previouspathsT = Set.new
 
 def traverse(arr, path, currdepth, maxdepth, header)
   return if maxdepth > 0 && currdepth >= maxdepth
+  return if @previouspathsT.include?(path) or @previouspathsT.include?(path.chomp("/"))
+  @previouspathsT << path
   arr.each do |a|
     display = path.gsub(%r{//+}, "/").sub(%r{/+$}, "") 
     display = "#{display}/#{a[:elem]}" if a[:elem]
@@ -115,7 +120,12 @@ def traverse(arr, path, currdepth, maxdepth, header)
   end
 end
 
+@previouspathsLF = Set.new
+
 def listfind(arr, path)
+  return if @previouspathsLF.include?(path) or @previouspathsLF.include?(path.chomp("/"))
+  @previouspathsLF << path
+
   arr.each do |a|
     if a[:list] 
       puts "LIST: #{path}/#{a[:elem]}"
@@ -135,7 +145,11 @@ def listfind(arr, path)
   end
 end
 
+@previouspathsBF = Set.new
+
 def booleanfind(arr, path)
+  return if @previouspathsBF.include?(path) or @previouspathsBF.include?(path.chomp("/"))
+  @previouspathsBF << path
   arr.each do |a|
     #pp a
     if a[:type] == "boolean"
@@ -157,7 +171,11 @@ def booleanfind(arr, path)
   end
 end
 
+@previouspathsNF = Set.new
+
 def numericfind(arr, path)
+  return if @previouspathsNF.include?(path)
+  @previouspathsNF << path
   arr.each do |a|
     #pp a
     elem = a[:elem] ? ( "/" + a[:elem] ) : ""
@@ -196,8 +214,14 @@ def isSimpleType(a)
   return false if @typegraph[a[:type]] && @typegraph[a[:type]].is_a?(Array)
 end
 
+@previouspathsSAF = Set.new
+
 def simpleattrfind(arr, path)
+  return if @previouspathsSAF.include?(path)
+  @previouspathsSAF << path
   arr.each do |a|
+    #pp a
+    #byebug
     elem = a[:elem] ? ( "/" + a[:elem] ) : ""
     if a[:attr] && !a[:attr].empty? && isSimpleType(a)
       puts "SIMPLE ATTRIBUTE: #{path}#{elem}\t#{a[:type] || a[:inherits]}"
@@ -217,7 +241,11 @@ def simpleattrfind(arr, path)
   end
 end
 
+@previouspathsCAF = Set.new
+
 def complexattrfind(arr, path)
+  return if @previouspathsCAF.include?(path)
+  @previouspathsCAF << path
   #byebug
   arr.each do |a|
     #pp a
