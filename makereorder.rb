@@ -1,5 +1,3 @@
-require "byebug"
-require "pp"
 graph = {}
 
 while line = gets do
