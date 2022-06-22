@@ -77,7 +77,7 @@ The output takes the following format:
     <xsl:value-of select="normalize-space()"/>
   </xsl:template>
 
-  <xsl:template match="//sif:Key | //sif:EventsReported | //sif:Description | //sif:Intro | //sif:Characteristics | //xhtml:Example | //sif:BuildComment | //sif:Section | //sif:TitlePage | //sif:CodeSet | //sif:Appendix[@name='References']" />
+  <xsl:template match="//sif:OpenAPI | //sif:Key | //sif:EventsReported | //sif:Description | //sif:Intro | //sif:Characteristics | //xhtml:Example | //sif:BuildComment | //sif:Section | //sif:TitlePage | //sif:CodeSet | //sif:Appendix[@name='References']" />
 
   <xsl:template match="//sif:DataObject | //sif:CommonElement">
     PARENT <xsl:apply-templates/>
