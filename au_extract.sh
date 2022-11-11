@@ -68,9 +68,9 @@ echo "<sif>" > test/siftest_specgen.xml
 if [ -d ./specgen_input/06_DataModel/Custom/Common ]; then
   for filename in ./specgen_input/06_DataModel/Custom/Common/*.xml; do
   #for filename in ./specgen/GenerateSpecTool_5/bin/Debug/dist/Specification/06_DataModel/Custom/Common/*.xml; do
-    if [[ "$filename" == "./specgen_input/06_DataModel/Custom/Common/StudentScoreSet.xml" ]] ; then #||
-       #[[ "$filename" == "./specgen_input/06_DataModel/Custom/Common/PersonPrivacyObligation.xml" ]] ||
-       #[[ "$filename" == "./specgen_input/06_DataModel/Custom/Common/ReportAuthorityInfo.xml" ]] ; then
+    if [[ "$filename" == "./specgen_input/06_DataModel/Custom/Common/StudentScoreSet.xml" ]] ||
+       [[ "$filename" == "./specgen_input/06_DataModel/Custom/Common/ResourceUsage.xml" ]] ||
+       [[ "$filename" == "./specgen_input/06_DataModel/Custom/Common/SystemRole.xml" ]] ; then
       continue
     fi
     perl sifexamples.pl "$filename" >> test/siftest.xml
