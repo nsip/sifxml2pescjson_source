@@ -4,13 +4,14 @@ echo "" > objectgraph.txt
 echo "" > typegraph.txt
 
 #  Run ONE OR MORE of the following to setup  objectgraph.txt and typegraph.txt
-sh au_extract.sh
 sh inf_extract.sh
+# inf runs first: its scripts/out.txt version number is to be overwritten by any locales run
+sh au_extract.sh
+#sh na_extract.sh
 #sh input_extract.sh
 
 # 3. Generate transformation scripts and stylesheets
 
-grep "schemaVersion" specgen_input/SIF.Config_DataModel_AU.xml | perl -pe 's/\s*<schemaVersion>/VERSION: /; s#</schemaVersion>##; $$_;' > scripts/out.txt
 ruby treeparse.rb >> scripts/out.txt
 ruby makexslt.rb < scripts/out.txt > scripts/sif2json.xslt
 ruby makexslt.rb -p < scripts/out.txt > scripts/sif2jsonspecgen.xslt

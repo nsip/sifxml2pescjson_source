@@ -110,3 +110,6 @@ cat attribute_test.xml >> test/siftest.xml
 echo "</sif>" >> test/siftest.xml
 echo "</sif>" >> test/siftest_specgen.xml
 xmllint --c14n test/siftest.xml | xmllint --format - >test/siftest.pretty.xml
+
+grep "schemaVersion" specgen_input_au/SIF.Config_DataModel_AU.xml | perl -pe 's/\s*<schemaVersion>/VERSION: /; s#</schemaVersion>##; $$_;' > scripts/out.txt
+
