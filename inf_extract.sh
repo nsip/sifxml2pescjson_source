@@ -7,14 +7,11 @@ shopt -s nocasematch
 
 
 # 1. Download specgen
-#rm -fr DraftSIFInfrastructureSpec
-#git clone https://github.com/nsip/DraftSIFInfrastructureSpec.git
+rm -fr DraftSIFInfrastructureSpec
+git clone https://github.com/nsip/DraftSIFInfrastructureSpec.git
 
 
 # 2. Extract all necessary information from specgen into flat files
-#    Start off with empty files...
-echo "" > objectgraph.txt
-echo "" > typegraph.txt
 
 # process all objects in the specification
 containsElement () {

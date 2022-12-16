@@ -1,9 +1,11 @@
 #!/bin/bash
 
+echo "" > objectgraph.txt
+echo "" > typegraph.txt
 
-#  Run ONE of the following to setup  objectgraph.txt and typegraph.txt
-#sh au_extract.sh
-#sh inf_extract.sh
+#  Run ONE OR MORE of the following to setup  objectgraph.txt and typegraph.txt
+sh au_extract.sh
+sh inf_extract.sh
 #sh input_extract.sh
 
 # 3. Generate transformation scripts and stylesheets
