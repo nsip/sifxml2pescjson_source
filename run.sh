@@ -4,11 +4,10 @@ echo "" > objectgraph.txt
 echo "" > typegraph.txt
 
 #  Run ONE OR MORE of the following to setup  objectgraph.txt and typegraph.txt
-sh inf_extract.sh
+sh inf_extract.sh ../specgen_input_infra
 # inf runs first: its scripts/out.txt version number is to be overwritten by any locales run
-sh au_extract.sh
-#sh na_extract.sh
-#sh input_extract.sh
+sh au_extract.sh ..
+#sh na_extract.sh ../specgen_input_na
 
 # 3. Generate transformation scripts and stylesheets
 

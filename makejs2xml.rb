@@ -68,7 +68,7 @@ function attributes(newobj) {
       /* brute force lookup: compare all paths in the object to all 
         complex content attribute paths known for the object */
           var key_stripped;
-          key_stripped = key.replace(/\\.[0-9]+/g, "");
+          key_stripped = key.replace(/\\.[0-9]+/g, "").replace(/\[[0-9]+\]/g, "");
           /* we don't have wildcard array access (cf. doc-wild) + path rename command in the same JS library.
              So forced to generate paths stripped of array indexes,
              to match registered complex content attribute paths  */
